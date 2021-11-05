@@ -1,0 +1,19 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexKharenko/PortfolioBackEnd.git"
+  },
+  "author": "AlexKharenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexKharenko/PortfolioBackEnd/issues"
+  },
+  "homepage": "https://github.com/AlexKharenko/PortfolioBackEnd#readme"
+}
