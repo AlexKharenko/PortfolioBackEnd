@@ -1,12 +1,12 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const DB = require('../db/index');
+const DBUser = require('../db/db_user');
 
 const router = express.Router();
 
 router.post('/signup', async (req, res) => {
-  const db = new DB();
+  const db = new DBUser();
   const usersData = await db.checkIfUsersExist();
   if (!usersData.success || usersData.count > 0) {
     res
@@ -30,7 +30,7 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const db = new DB();
+  const db = new DBUser();
   const { login, password } = req.body;
   if (!(login && password)) {
     res.status(400).send('All input is required');
