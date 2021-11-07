@@ -25,6 +25,19 @@ class DB {
     }
   }
 
+  async findUser(login) {
+    try {
+      const { rows } = await this.pool.query(
+        'SELECT * from "user" WHERE "id" = ($1)',
+        [login]
+      );
+      return { success: true, user: rows };
+    } catch (err) {
+      console.log(err);
+      return { success: false, error: err };
+    }
+  }
+
   async deleteUser(id) {
     try {
       await this.pool.query('SELECT "Delete_User" ($1)', [id]);
