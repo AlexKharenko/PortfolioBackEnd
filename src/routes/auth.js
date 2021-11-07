@@ -14,6 +14,11 @@ router.post('/signup', async (req, res) => {
       .json({ success: false, main_massage: 'Forbiden to create account' });
     return;
   }
+  const { login, password } = req.body;
+  if (!(login && password)) {
+    res.status(400).send('All input is required');
+    return;
+  }
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
   const newUser = {
@@ -24,5 +29,13 @@ router.post('/signup', async (req, res) => {
   res.status(201).json(result);
 });
 
+router.post('/login', async (req, res) => {
+  const { login, password } = req.body;
+  if (!(login && password)) {
+    res.status(400).send('All input is required');
+    return;
+  }
+
+});
 
 module.exports = router;
