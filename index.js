@@ -1,15 +1,33 @@
-const express = require('express');
-
-const app = express();
-
 require('dotenv').config();
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const port = process.env.PORT || 3000;
 const address = process.env.ADDRESS || '0.0.0.0';
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+const app = express();
+
+const corsOptions = {
+  credentials: true,
+  origin: `http://${address}:${port}`,
+};
+app.use(cookieParser());
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.json());
+
+const authRouter = require('./src/routes/auth');
+const worksRouter = require('./src/routes/works');
+const profileRouter = require('./src/routes/profile');
+
+app.use('/', authRouter);
+// app.use('/works', worksRouter);
+app.use('/profile', profileRouter);
 
 app.listen(port, address, () => {
   console.log(`App listening on port http://${address}:${port}`);

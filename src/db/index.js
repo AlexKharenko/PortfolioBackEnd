@@ -20,7 +20,6 @@ class DB {
       await this.pool.query('SELECT "Insert_User" ($1, $2)', [login, password]);
       return { success: true };
     } catch (err) {
-      console.log(err);
       return { success: false, error: err };
     }
   }
@@ -28,12 +27,11 @@ class DB {
   async findUser(login) {
     try {
       const { rows } = await this.pool.query(
-        'SELECT * from "user" WHERE "id" = ($1)',
+        'SELECT * from "user" WHERE "login" = ($1)',
         [login]
       );
       return { success: true, user: rows };
     } catch (err) {
-      console.log(err);
       return { success: false, error: err };
     }
   }
@@ -43,7 +41,6 @@ class DB {
       await this.pool.query('SELECT "Delete_User" ($1)', [id]);
       return { success: true };
     } catch (err) {
-      console.log(err);
       return { success: false, error: err };
     }
   }
