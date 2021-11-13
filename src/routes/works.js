@@ -128,9 +128,13 @@ router.get('/get/allworks', auth, async (req, res) => {
 router.get('/get/works', async (req, res) => {
   const db = new DBWork();
   const languageShort = req.query.language_short;
-  const { data } = await db.getLanguage(languageShort);
   try {
-    const result = await db.getAllWorksByLanguage(data.id);
+    let result = await db.getLanguage(languageShort);
+    if (result.status === 404) {
+      res.status(404).json({ ...result, message: 'Not found!' });
+      return;
+    }
+    result = await db.getAllWorksByLanguage(result.data.id);
     if (result.success) {
       res.status(200).json(result);
       return;
