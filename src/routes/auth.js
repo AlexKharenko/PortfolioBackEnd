@@ -11,7 +11,7 @@ router.post('/signup', async (req, res) => {
   if (!usersData.success || usersData.count > 0) {
     res
       .status(403)
-      .json({ success: false, main_message: 'Forbiden to create account' });
+      .json({ success: false, message: 'Forbiden to create account' });
     return;
   }
   const { login, password } = req.body;
@@ -37,30 +37,44 @@ router.post('/login', async (req, res) => {
     return;
   }
   const result = await db.findUser(login);
-  if (!result.success) {
-    res.status(404).json(result);
+  if (result.user.length === 0) {
+    res.status(404).json({ ...result, message: 'User not found!' });
     return;
   }
   try {
     if (
-      result.user &&
+      result.user.length > 0 &&
       (await bcrypt.compare(password, result.user[0].password))
     ) {
       const user = result.user[0];
-      const token = jwt.sign({ user_id: user.id }, process.env.JWT_SECRET, {
-        expiresIn: '12h',
-      });
+      const token = jwt.sign(
+        { user_id: user.id, login: user.login },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '12h',
+        }
+      );
       res
+        .status(200)
         .cookie('jwt', token, {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 12,
           sameSite: 'none',
-          secure: false,
+          secure: true,
         })
         .json({
           success: true,
-          main_message: 'You are succesfully logged in!',
+          message: 'You are succesfully logged in!',
         });
+    }
+    if (
+      result.user.length > 0 &&
+      !(await bcrypt.compare(password, result.user[0].password))
+    ) {
+      res.status(403).json({
+        success: true,
+        message: 'Password incorrect!',
+      });
     }
   } catch (err) {
     res.status(500).json({ success: false, error: err });
@@ -71,7 +85,7 @@ router.post('/logout', async (req, res) => {
   res
     .cookie('jwt', '', { maxAge: 0 })
     .status(201)
-    .json({ success: true, main_message: 'You are succesfully logged out!' });
+    .json({ success: true, message: 'You are succesfully logged out!' });
 });
 
 module.exports = router;
