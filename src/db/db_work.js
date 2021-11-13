@@ -111,7 +111,7 @@ class DBWork extends DB {
         'SELECT "id" FROM "language" WHERE "language_short" = ($1)',
         [languageShort]
       );
-      if (dataWork.rows) {
+      if (dataWork.rows.length > 0) {
         return { success: true, data: dataWork.rows[0] };
       }
       return { success: false, status: 404 };
@@ -125,7 +125,7 @@ class DBWork extends DB {
       const dataWork = await this.pool.query(
         'SELECT * FROM "works" w JOIN "cover_image" c ON w.cover_image_id = c.id JOIN "work_details" wd ON w.id = wd.work_id JOIN "language" l ON l.id = wd.language_id'
       );
-      if (dataWork.rows) {
+      if (dataWork.rows.length > 0) {
         return { success: true, data: dataWork.rows };
       }
       return { success: false, status: 404 };
@@ -140,7 +140,7 @@ class DBWork extends DB {
         'SELECT * FROM "works" w JOIN "cover_image" c ON w.cover_image_id = c.id JOIN "work_details" wd ON w.id = wd.work_id AND wd.language_id = ($1)',
         [languageId]
       );
-      if (dataWork.rows) {
+      if (dataWork.rows.length > 0) {
         return { success: true, data: dataWork.rows };
       }
       return { success: false, status: 404 };
@@ -155,7 +155,7 @@ class DBWork extends DB {
         'SELECT * FROM "works" w JOIN "cover_image" c ON w.cover_image_id = c.id JOIN "work_details" wd ON w.id = wd.work_id and wd.language_id = ($1) WHERE w.id = ($2)',
         [languageId, workId]
       );
-      if (dataWork.rows) {
+      if (dataWork.rows.length > 0) {
         return { success: true, data: dataWork.rows[0] };
       }
       return { success: false, status: 404 };
@@ -167,7 +167,7 @@ class DBWork extends DB {
   async getAllLanguages() {
     try {
       const dataWork = await this.pool.query('SELECT * FROM "language"');
-      if (dataWork.rows) {
+      if (dataWork.rows.length > 0) {
         return { success: true, data: dataWork.rows };
       }
       return { success: false, status: 404 };
