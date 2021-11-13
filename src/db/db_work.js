@@ -50,13 +50,12 @@ class DBWork extends DB {
   }
 
   async updateWork(work) {
-    const { workId, link, gitLink, coverImageId } = work;
+    const { workId, link, gitLink } = work;
     try {
-      await this.pool.query('SELECT "Update_Work" ($1, $2, $3, $4)', [
+      await this.pool.query('SELECT "Update_Work" ($1, $2, $3)', [
         workId,
         link,
         gitLink,
-        coverImageId,
       ]);
       return { success: true };
     } catch (err) {
@@ -106,10 +105,39 @@ class DBWork extends DB {
     }
   }
 
+  async getLanguage(languageShort) {
+    try {
+      const dataWork = await this.pool.query(
+        'SELECT "id" FROM "language" WHERE "language_short" = ($1)',
+        [languageShort]
+      );
+      if (dataWork.rows) {
+        return { success: true, data: dataWork.rows[0] };
+      }
+      return { success: false, status: 404 };
+    } catch (err) {
+      return { success: false, error: err };
+    }
+  }
+
+  async getAllWorks() {
+    try {
+      const dataWork = await this.pool.query(
+        'SELECT * FROM "works" w JOIN "cover_image" c ON w.cover_image_id = c.id JOIN "work_details" wd ON w.id = wd.work_id JOIN "language" l ON l.id = wd.language_id'
+      );
+      if (dataWork.rows) {
+        return { success: true, data: dataWork.rows };
+      }
+      return { success: false, status: 404 };
+    } catch (err) {
+      return { success: false, error: err };
+    }
+  }
+
   async getAllWorksByLanguage(languageId) {
     try {
       const dataWork = await this.pool.query(
-        'SELECT * FROM "works" w JOIN "cover_image" c ON w.cover_image_id = c.id JOIN "work_details" wd ON w.id = wd.work_id and wd.language_id = ($1)',
+        'SELECT * FROM "works" w JOIN "cover_image" c ON w.cover_image_id = c.id JOIN "work_details" wd ON w.id = wd.work_id AND wd.language_id = ($1)',
         [languageId]
       );
       if (dataWork.rows) {
