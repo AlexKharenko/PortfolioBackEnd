@@ -12,12 +12,12 @@ const app = express();
 
 const corsOptions = {
   credentials: true,
-  origin: `http://${address}:${port}`,
+  origin: [`http://${address}:${port}`, process.env.FRONTEND_URL],
 };
 app.use(cookieParser());
 app.use(cors(corsOptions));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '20mb' }));
+app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 
 app.use(express.json());
 
@@ -26,7 +26,7 @@ const worksRouter = require('./src/routes/works');
 const profileRouter = require('./src/routes/profile');
 
 app.use('/', authRouter);
-// app.use('/works', worksRouter);
+app.use('/works', worksRouter);
 app.use('/profile', profileRouter);
 
 app.listen(port, address, () => {
