@@ -137,7 +137,7 @@ class DBWork extends DB {
   async getAllWorksByLanguage(languageId) {
     try {
       const dataWork = await this.pool.query(
-        'SELECT * FROM "works" w JOIN "cover_image" c ON w.cover_image_id = c.id JOIN "work_details" wd ON w.id = wd.work_id AND wd.language_id = ($1)',
+        'SELECT * FROM "Get_Works_By_Lang"($1)',
         [languageId]
       );
       if (dataWork.rows.length > 0) {
