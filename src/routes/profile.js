@@ -15,7 +15,7 @@ router.post('/message', limiter, async (req, res) => {
   const mailOption = {
     to: process.env.EMAIL,
     subject: req.body.subject,
-    text: `${req.body.text} \nFrom: ${req.body.from}`,
+    text: `${req.body.message} \nFrom: ${req.body.from}`,
   };
   try {
     await transporter.sendMail(mailOption);
