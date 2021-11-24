@@ -83,7 +83,12 @@ router.post('/login', async (req, res) => {
 
 router.post('/logout', async (req, res) => {
   res
-    .cookie('jwt', '', { maxAge: 0 })
+    .cookie('jwt', '', {
+      httpOnly: true,
+      maxAge: 0,
+      sameSite: 'none',
+      secure: true,
+    })
     .status(201)
     .json({ success: true, message: 'You are succesfully logged out!' });
 });
